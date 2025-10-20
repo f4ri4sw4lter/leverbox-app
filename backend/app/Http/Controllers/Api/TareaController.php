@@ -66,7 +66,6 @@ class TareaController extends Controller
         $tarea->update($data);
 
         if (is_array($etiquetas)) {
-            // sincroniza etiquetas (remueve las antiguas que no estén en la lista)
             $tarea->etiquetas()->sync($etiquetas);
         }
 

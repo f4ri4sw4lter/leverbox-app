@@ -16,6 +16,15 @@ export const useTaskStore = defineStore('taskStore', {
     tasks: [] as Task[],
   }),
   actions: {
+    async fetchTask(id: number) {
+      try {
+        const { data } = await api.get(`/tareas/${id}`);
+        return data.data;
+      } catch (error) {
+        console.error('Error fetching task:', error);
+        throw error;
+      }
+    },
     async fetchTasks() {
       try {
         const { data } = await api.get('/tareas');
