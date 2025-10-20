@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('prioridades', function (Blueprint $table) {
             $table->id();
-            // Enum con valores BAJA, MEDIA, ALTA (mayúsculas según requerimiento)
             $table->enum('prioridad', ['BAJA', 'MEDIA', 'ALTA'])->unique();
             $table->timestamps();
         });

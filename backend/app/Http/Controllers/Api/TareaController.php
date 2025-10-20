@@ -8,6 +8,7 @@ use App\Models\Etiqueta;
 use App\Http\Requests\StoreTareaRequest;
 use App\Http\Requests\UpdateTareaRequest;
 use Illuminate\Http\JsonResponse;
+use Throwable;
 
 class TareaController extends Controller
 {
@@ -27,20 +28,30 @@ class TareaController extends Controller
      */
     public function store(StoreTareaRequest $request): JsonResponse
     {
-        $data = $request->validated();
+        try {
 
-        $etiquetas = $data['etiquetas'] ?? [];
-        unset($data['etiquetas']);
+            $data = $request->validated();
 
-        $tarea = Tarea::create($data);
+            $etiquetas = $data['etiquetas'] ?? [];
+            unset($data['etiquetas']);
 
-        if (!empty($etiquetas)) {
-            $tarea->etiquetas()->attach($etiquetas);
+            foreach($etiquetas as $etiqueta) {
+                Etiqueta::create($etiqueta);
+            }
+
+            $tarea = Tarea::create($data);
+
+            if (!empty($etiquetas)) {
+                $tarea->etiquetas()->attach($etiquetas);
+            }
+
+            $tarea->load(['prioridad', 'etiquetas']);
+
+            return response()->json(['data' => $tarea], 201);
+            
+        } catch (Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
         }
-
-        $tarea->load(['prioridad', 'etiquetas']);
-
-        return response()->json(['data' => $tarea], 201);
     }
 
     /**

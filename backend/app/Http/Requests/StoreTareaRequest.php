@@ -21,7 +21,7 @@ class StoreTareaRequest extends FormRequest
             'fecha_vencimiento' => ['nullable', 'date'],
             'prioridad_id' => ['required', 'integer', 'exists:prioridades,id'],
             'etiquetas' => ['nullable', 'array'],
-            'etiquetas.*' => ['integer', 'exists:etiquetas,id'],
+            'etiquetas.*' => ['string'],
         ];
     }
 }

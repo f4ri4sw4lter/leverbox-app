@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('etiquetas', function (Blueprint $table) {
             $table->id();
-            // Enum con valores DEV - QA - RRHH
             $table->enum('etiqueta', ['DEV', 'QA', 'RRHH'])->unique();
             $table->timestamps();
         });
