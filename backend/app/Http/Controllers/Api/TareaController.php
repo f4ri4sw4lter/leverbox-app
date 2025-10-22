@@ -9,11 +9,9 @@ use App\Http\Requests\UpdateTareaRequest;
 use Illuminate\Http\JsonResponse;
 
 use Throwable;
-use Carbon\Carbon;
 
 class TareaController extends Controller
 {
-
     
     /**
      * Mostrar todas las tareas con sus prioridades y etiquetas.
@@ -30,7 +28,6 @@ class TareaController extends Controller
         }
 
     }
-
 
     /**
      * Almacena una nueva tarea con sus prioridades y etiquetas.
@@ -62,7 +59,6 @@ class TareaController extends Controller
         }
     }
 
-
     /**
      * Mostrar una tarea con sus prioridades y etiquetas.
      *
@@ -78,7 +74,6 @@ class TareaController extends Controller
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
-
 
     /**
      * Actualizar una tarea existente con sus prioridades y etiquetas.
@@ -108,7 +103,6 @@ class TareaController extends Controller
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
-
 
     /**
      * Elimina una tarea existente con sus prioridades y etiquetas.

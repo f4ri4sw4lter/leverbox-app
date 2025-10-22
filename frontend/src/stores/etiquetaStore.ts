@@ -15,7 +15,6 @@ export const useEtiquetaStore = defineStore('etiquetaStore', {
       try {
         const { data } = await api.get('/etiquetas');
         this.etiquetas = data.data;
-        console.log(data.data)
         return data.data;
       } catch (error) {
         throw error;

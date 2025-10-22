@@ -39,7 +39,6 @@ export const useTareaStore = defineStore('tareaStore', {
       this.tareas.push(data);
     },
     async modificarTarea(tarea: Tarea) {
-      console.log(tarea)
       const { data } = await api.put(`/tareas/${tarea.id}`, tarea);
       const index = this.tareas.findIndex(t => t.id === data.id);
       if (index !== -1) this.tareas[index] = data;
