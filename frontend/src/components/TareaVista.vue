@@ -1,5 +1,6 @@
 <template>
-    <button type="button" class="btn btn-secondary rounded mb-3" @click="volver"><i class="bi bi-arrow-left"></i></button>
+    <button type="button" class="btn btn-secondary rounded mb-3" @click="volver"><i
+            class="bi bi-arrow-left"></i></button>
 
     <form @submit.prevent="submit" class="">
         <div class="row g-3 mb-4">
@@ -30,15 +31,16 @@
                     </div>
 
                     <hr>
-
                     <div class="mb-3">
                         <label class="form-label">Etiquetas</label>
                         <div>
-                            <div class="form-check form-check-inline" v-for="etiqueta in etiquetas" :key="etiqueta">
-                                <input class="form-check-input" type="checkbox" :id="'etiqueta-' + etiqueta.etiqueta"
-                                    :value=etiqueta.etiqueta v-model="tarea.etiquetas" />
-                                <label class="form-check-label" :for="'etiqueta-' + etiqueta.etiqueta">{{
-                                    etiqueta.etiqueta }}</label>
+                            <div class="form-check form-check-inline" v-for="etiqueta in etiquetas" :key="etiqueta.id">
+                                <!-- usar v-model en tarea.etiquetas (array de ids). quitar :checked/isChecked y no vincular al objeto etiqueta -->
+                                <input class="form-check-input" type="checkbox" :id="'etiqueta-' + etiqueta.id"
+                                    :value="etiqueta.id" v-model="tarea.etiquetas" />
+                                <label class="form-check-label" :for="'etiqueta-' + etiqueta.id">
+                                    {{ etiqueta.etiqueta }}
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -48,6 +50,26 @@
                     <div class="col-auto">
                         <label class="form-label">Vence</label>
                         <input v-model="tarea.fecha_vencimiento" type="date" class="form-control" />
+                    </div>
+
+                    <hr>
+
+                    <div class="col-auto d-flex">
+                        <div class="col-auto">
+                            <label class="form-label">Prioridad</label>
+                            <select v-model="tarea.prioridad_id" class="form-select select-prioridad">
+                                <option value="1">BAJA</option>
+                                <option value="2">MEDIA</option>
+                                <option value="3">ALTA</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="col-auto d-flex">
+                        <button type="button" class="btn btn-sm btn-danger" @click="confirmarBorrado">Borrar tarea <i
+                                class="bi bi-trash-fill"></i></button>
                     </div>
 
                 </div>
@@ -71,7 +93,7 @@ const storeEtiqueta = useEtiquetaStore();
 const route = useRoute();
 const router = useRouter();
 const mostrarGuardar = ref(false)
-const etiquetas = ref<string[]>([]);
+const etiquetas = ref<Object[]>([]);
 const textarea = ref<HTMLTextAreaElement | null>(null)
 const tarea = ref<Partial<Tarea>>({
     titulo: '',
@@ -93,6 +115,9 @@ watch(
 onMounted(async () => {
     etiquetas.value = await storeEtiqueta.fetchEtiquetas();
     tarea.value = await storeTarea.fetchTarea(Number(route.params.id));
+    tarea.value.etiquetas = (tarea.value.etiquetas ?? []).map((e: any) =>
+        typeof e === 'number' ? e : (e?.id ?? e)
+    );
     nextTick(() => autoResize())
 });
 
@@ -113,4 +138,20 @@ async function submit() {
     router.push('/');
 }
 
+async function confirmarBorrado() {
+    const confirmado = window.confirm('¿Estás seguro que quieres borrar esta tarea? Esta acción no se puede deshacer.');
+    if (!confirmado) return;
+    await borrarTarea();
+}
+
+async function borrarTarea() {
+    await storeTarea.eliminarTarea(props.id);
+    router.push('/');
+}
+
+function isChecked(etiquetaId: number) {
+
+    const { etiquetas } = tarea.value;
+    return etiquetas.some(e => e.id === etiquetaId);
+}
 </script>

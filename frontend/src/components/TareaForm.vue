@@ -12,7 +12,7 @@
     </div>
 
     <div class="row g-2 align-items-center mb-3">
-      <div class="col-auto">
+      <div class="col-6">
         <label class="form-label">Estado</label>
         <select v-model="tarea.estado" class="form-select">
           <option value="pendiente">Pendiente</option>
@@ -21,12 +21,21 @@
         </select>
       </div>
 
+      <div class="col-6">
+        <label class="form-label">Prioridad</label>
+        <select v-model="tarea.prioridad_id" class="form-select">
+          <option value="1">BAJA</option>
+          <option value="2">MEDIA</option>
+          <option value="3">ALTA</option>
+        </select>
+      </div>
+
       <div class="mb-3">
         <label class="form-label">Etiquetas</label>
         <div>
           <div class="form-check form-check-inline" v-for="etiqueta in etiquetas" :key="etiqueta">
-            <input class="form-check-input" type="checkbox" :id="'etiqueta-' + etiqueta.etiqueta"
-              :value=etiqueta.etiqueta v-model="tarea.etiquetas" />
+            <input class="form-check-input" type="checkbox" :id="'etiqueta-' + etiqueta.etiqueta" :value=etiqueta.id
+              v-model="tarea.etiquetas" />
             <label class="form-check-label" :for="'etiqueta-' + etiqueta.etiqueta">{{ etiqueta.etiqueta }}</label>
           </div>
         </div>

@@ -2,29 +2,41 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Tarea;
-use App\Models\Etiqueta;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTareaRequest;
 use App\Http\Requests\UpdateTareaRequest;
 use Illuminate\Http\JsonResponse;
+
 use Throwable;
+use Carbon\Carbon;
 
 class TareaController extends Controller
 {
+
+    
     /**
-     * Listar todas las tareas.
+     * Mostrar todas las tareas con sus prioridades y etiquetas.
+     *
+     * @return JsonResponse
      */
     public function index(): JsonResponse
     {
-        // Cargar prioridad y etiquetas para cada tarea
-        $tareas = Tarea::with(['prioridad', 'etiquetas'])->get();
+        try {
+            $tareas = Tarea::with(['prioridad', 'etiquetas'])->get();
+            return response()->json(['data' => $tareas], 200);
+        } catch (Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
 
-        return response()->json(['data' => $tareas], 200);
     }
 
+
     /**
-     * Crear una tarea.
+     * Almacena una nueva tarea con sus prioridades y etiquetas.
+     * 
+     * @param StoreTareaRequest $request
+     * @return JsonResponse
      */
     public function store(StoreTareaRequest $request): JsonResponse
     {
@@ -34,10 +46,6 @@ class TareaController extends Controller
 
             $etiquetas = $data['etiquetas'] ?? [];
             unset($data['etiquetas']);
-
-            foreach($etiquetas as $etiqueta) {
-                Etiqueta::create($etiqueta);
-            }
 
             $tarea = Tarea::create($data);
 
@@ -54,44 +62,67 @@ class TareaController extends Controller
         }
     }
 
+
     /**
-     * Ver una tarea específica.
+     * Mostrar una tarea con sus prioridades y etiquetas.
+     *
+     * @param Tarea $tarea
+     * @return JsonResponse
      */
     public function show(Tarea $tarea): JsonResponse
     {
-        $tarea->load(['prioridad', 'etiquetas']);
-
-        return response()->json(['data' => $tarea], 200);
+        try {
+            $tarea->load(['prioridad', 'etiquetas']);
+            return response()->json(['data' => $tarea], 200);
+        } catch (Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
     }
 
+
     /**
-     * Editar/actualizar una tarea.
+     * Actualizar una tarea existente con sus prioridades y etiquetas.
+     *
+     * @param UpdateTareaRequest $request
+     * @param Tarea $tarea
+     * @return JsonResponse
      */
     public function update(UpdateTareaRequest $request, Tarea $tarea): JsonResponse
     {
-        $data = $request->validated();
+        try {
+            $data = $request->validated();
 
-        $etiquetas = $data['etiquetas'] ?? null;
-        unset($data['etiquetas']);
+            $etiquetas = $data['etiquetas'] ?? null;
+            unset($data['etiquetas']);
 
-        $tarea->update($data);
+            $tarea->update($data);
 
-        if (is_array($etiquetas)) {
-            $tarea->etiquetas()->sync($etiquetas);
+            if (is_array($etiquetas)) {
+                $tarea->etiquetas()->sync($etiquetas);
+            }
+
+            $tarea->load(['prioridad', 'etiquetas']);
+
+            return response()->json(['data' => $tarea], 200);
+        } catch (Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
         }
-
-        $tarea->load(['prioridad', 'etiquetas']);
-
-        return response()->json(['data' => $tarea], 200);
     }
 
+
     /**
-     * Eliminar una tarea.
+     * Elimina una tarea existente con sus prioridades y etiquetas.
+     *
+     * @param Tarea $tarea
+     * @return JsonResponse
      */
     public function destroy(Tarea $tarea): JsonResponse
     {
-        $tarea->delete();
-
-        return response()->json(null, 204);
+        try {
+            $tarea->delete();
+            return response()->json(null, 204);
+        } catch (Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
     }
 }
