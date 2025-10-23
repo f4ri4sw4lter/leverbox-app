@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->enum('prioridad', ['BAJA', 'MEDIA', 'ALTA'])->unique();
             $table->timestamps();
+            $table->string('color');
         });
     }
 

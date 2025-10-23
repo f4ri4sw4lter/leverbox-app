@@ -13,6 +13,7 @@ class Prioridad extends Model
 
     protected $fillable = [
         'prioridad',
+        'color'
     ];
 
     // Relación 1 a muchos: una prioridad puede tener muchas tareas

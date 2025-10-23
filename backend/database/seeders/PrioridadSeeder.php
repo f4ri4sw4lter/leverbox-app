@@ -9,10 +9,23 @@ class PrioridadSeeder extends Seeder
 {
     public function run(): void
     {
-        $values = ['BAJA', 'MEDIA', 'ALTA'];
+        $prioridades = [
+            [
+                'prioridad' => 'BAJA',
+                'color' => '#28BA18'
+            ],
+            [
+                'prioridad' => 'MEDIA',
+                'color' => '#EDE728'
+            ],
+            [
+                'prioridad' => 'ALTA',
+                'color' => '#E02810'
+            ],
+        ];
 
-        foreach ($values as $val) {
-            Prioridad::firstOrCreate(['prioridad' => $val]);
+        foreach ($prioridades as $prioridad) {
+            Prioridad::firstOrCreate(['prioridad' => $prioridad['prioridad'], 'color' => $prioridad['color']]);
         }
     }
 }
