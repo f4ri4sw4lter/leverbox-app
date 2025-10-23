@@ -8,7 +8,7 @@
     <div class="mb-3">
       <label class="form-label">Descripción</label>
       <textarea v-model="tarea.descripcion" class="form-control" roows="3"
-        placeholder="Describa la tarea a realizar"></textarea>
+        placeholder="Describa la tarea a realizar" required></textarea>
     </div>
 
     <div class="row g-2 align-items-center mb-3">
