@@ -44,7 +44,7 @@ docker compose up -d
 
 Esto construirá y levantará todos los servicios definidos en el archivo `docker-compose.yml`.
 
-### 2. Corre las migraciones
+### 2. Instalar las dependencias, migraciones y seeders
 
 ```bash
 docker exec -it php_82 sh
