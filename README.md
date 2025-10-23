@@ -24,16 +24,12 @@ cd nombre-proyecto
 
 ### 2. Configuración de variables de entorno
 
-Clonar el archivo `.env.example` ya está configurado con valores por defecto:
+Copiar los archivos `.env.example` que ya estan configurado con valores por defecto:
 
 ```bash
 cp .env.example .env
-```
-
-El archivo `frontend/.env` está configurado para desarrollo:
-```bash
-VITE_API_BASE_URL=http://localhost:8081
-VITE_APP_NAME="Laravel Vue3 App"
+cp frontend/.env.example frontend/.env
+cp backend/.env.example backend/.env
 ```
 
 ## Ejecución del proyecto
@@ -43,7 +39,7 @@ VITE_APP_NAME="Laravel Vue3 App"
 Para levantar todos los proyectos (backend, frontend, base de datos y nginx) juntos, ejecuta:
 
 ```bash
-docker compose up --build
+docker compose up -d
 ```
 
 Esto construirá y levantará todos los servicios definidos en el archivo `docker-compose.yml`.
@@ -51,7 +47,8 @@ Esto construirá y levantará todos los servicios definidos en el archivo `docke
 ### 2. Corre las migraciones
 
 ```bash
-docker exec -it php_82 bash
+docker exec -it php_82 sh
+composer install
 php artisan migrate
 php artisan key:generate
 php artisan db:seed
